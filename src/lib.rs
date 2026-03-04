@@ -1,4 +1,4 @@
-pub mod protocol;
-mod header;
+mod protocol;
+pub mod header;
 
 pub use protocol::{Message, MessageType};
