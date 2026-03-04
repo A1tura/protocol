@@ -1,3 +1,5 @@
+use crate::errors;
+
 pub enum Message {
     CreateLimitOrder {
         symbol: u32,
@@ -14,10 +16,12 @@ pub enum Message {
         symbol: u32,
         order_id: u32,
     },
+    Error(errors::ProtocolErrors),
 }
 
 pub enum MessageType {
     CreateLimitOrder = 1,
     CreateMarketOrder = 2,
     CancelOrder = 3,
+    Error = 4,
 }

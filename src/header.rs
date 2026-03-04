@@ -1,7 +1,7 @@
 pub const HEADER_SIZE: usize = 9;
 
 pub enum HeaderError {
-    InvalidLength,
+    InvalidLength = 1,
 }
 
 pub struct Header {
