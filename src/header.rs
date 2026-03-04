@@ -1,4 +1,4 @@
-const HEADER_SIZE: usize = 9;
+pub const HEADER_SIZE: usize = 9;
 
 pub enum HeaderError {
     InvalidLength,
