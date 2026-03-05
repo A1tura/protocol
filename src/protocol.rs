@@ -74,6 +74,15 @@ impl Message {
             Self::Error(err) => {
                 let error_code: &[u8; 1] = &[err.get_error_code()];
                 let _ = message.write(error_code);
+            },
+            Self::CreateLimitOrder { symbol, side, price, quantity } => {
+                let mut buf = Vec::new();
+                let _ = buf.write_all(&symbol.to_le_bytes());
+                let _ = buf.write_all(&side.to_le_bytes());
+                let _ = buf.write_all(&price.to_le_bytes());
+                let _ = buf.write_all(&quantity.to_le_bytes());
+
+                return buf;
             }
             _ => {}
         };
