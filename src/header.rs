@@ -1,3 +1,5 @@
+use std::io::Write;
+
 pub const HEADER_SIZE: usize = 11;
 
 pub enum HeaderError {
@@ -28,5 +30,25 @@ impl Header {
             seq_num,
             msg_type,
         });
+    }
+
+    pub fn new(version: u32, length: u16, seq_num: u32, msg_type: u8) -> Self {
+        return Self {
+            version,
+            length,
+            seq_num,
+            msg_type
+        }
+    }
+
+    pub fn as_bytes(&self) -> [u8; HEADER_SIZE] {
+        let mut header: Vec<u8> = Vec::new();
+
+        let _ = header.write(&self.version.to_le_bytes());
+        let _ = header.write(&self.length.to_le_bytes());
+        let _ = header.write(&self.seq_num.to_le_bytes());
+        let _ = header.write(&self.msg_type.to_le_bytes());
+
+        return header.as_slice().try_into().unwrap();
     }
 }
