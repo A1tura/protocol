@@ -11,6 +11,9 @@ impl ProtocolErrors {
                 match err {
                     HeaderError::InvalidLength => {
                         return 1;
+                    },
+                    HeaderError::InvalidHeader => {
+                        return 2
                     }
                 }
             }

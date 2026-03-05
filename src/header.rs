@@ -4,6 +4,7 @@ pub const HEADER_SIZE: usize = 11;
 
 pub enum HeaderError {
     InvalidLength = 1,
+    InvalidHeader = 2,
 }
 
 pub struct Header {
@@ -13,16 +14,22 @@ pub struct Header {
     pub msg_type: u8,
 }
 
+impl From<std::array::TryFromSliceError> for HeaderError {
+    fn from(_: std::array::TryFromSliceError) -> Self {
+        Self::InvalidHeader
+    }
+}
+
 impl Header {
     pub fn from(header: &[u8]) -> Result<Self, HeaderError> {
         if header.len() != HEADER_SIZE {
             return Err(HeaderError::InvalidLength);
         }
 
-        let version = u32::from_le_bytes(header[..=4].try_into().unwrap());
-        let length = u16::from_le_bytes(header[4..=6].try_into().unwrap());
-        let seq_num = u32::from_le_bytes(header[6..=10].try_into().unwrap());
-        let msg_type = u8::from_le_bytes(header[10..=11].try_into().unwrap());
+        let version = u32::from_le_bytes(header[..=4].try_into()?);
+        let length = u16::from_le_bytes(header[4..=6].try_into()?);
+        let seq_num = u32::from_le_bytes(header[6..=10].try_into()?);
+        let msg_type = u8::from_le_bytes(header[10..=11].try_into()?);
 
         return Ok(Self {
             version,
@@ -37,8 +44,8 @@ impl Header {
             version,
             length,
             seq_num,
-            msg_type
-        }
+            msg_type,
+        };
     }
 
     pub fn as_bytes(&self) -> [u8; HEADER_SIZE] {
