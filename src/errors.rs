@@ -1,5 +1,6 @@
 use super::header::HeaderError;
 
+#[derive(Debug)]
 pub enum ProtocolErrors {
     HeaderError(HeaderError),
 }

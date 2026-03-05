@@ -2,6 +2,7 @@ use std::io::Write;
 
 use crate::errors;
 
+#[derive(Debug)]
 pub enum Message {
     CreateLimitOrder {
         symbol: u32,
@@ -21,6 +22,7 @@ pub enum Message {
     Error(errors::ProtocolErrors),
 }
 
+#[derive(Debug)]
 pub enum MessageType {
     CreateLimitOrder = 1,
     CreateMarketOrder = 2,

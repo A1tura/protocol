@@ -2,11 +2,13 @@ use std::io::Write;
 
 pub const HEADER_SIZE: usize = 11;
 
+#[derive(Debug)]
 pub enum HeaderError {
     InvalidLength = 1,
     InvalidHeader = 2,
 }
 
+#[derive(Debug)]
 pub struct Header {
     pub version: u32,
     pub length: u16,
