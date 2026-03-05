@@ -1,6 +1,6 @@
 use std::io::Write;
 
-use crate::errors;
+use crate::errors::{self, ProtocolErrors};
 
 #[derive(Debug)]
 pub enum Message {
@@ -31,6 +31,28 @@ pub enum MessageType {
 }
 
 impl Message {
+    pub fn from(msg_type: MessageType, bytes: &[u8]) -> Result<Self, ProtocolErrors> {
+        if bytes.len() <= 1 {
+            return Err(ProtocolErrors::InvalidBody);
+        }
+
+        match msg_type {
+            MessageType::CreateLimitOrder => {
+                return Message::parse_limit_order(&bytes[0..]);
+            }
+            _ => todo!()
+        }
+    }
+
+    fn parse_limit_order(bytes: &[u8]) -> Result<Message, ProtocolErrors> {
+        let symbol = u32::from_le_bytes(bytes[..4].try_into()?);
+        let side = bytes[4];
+        let price = u32::from_le_bytes(bytes[5..9].try_into()?);
+        let quantity = u32::from_le_bytes(bytes[9..13].try_into()?);
+
+        return Ok(Message::CreateLimitOrder { symbol, side, price, quantity });
+    }
+
     pub fn as_byte(&self) -> Vec<u8> {
         let mut message: Vec<u8> = Vec::new();
 
@@ -38,7 +60,7 @@ impl Message {
             Self::Error(err) => {
                 let error_code: &[u8; 1] = &[err.get_error_code()];
                 let _ = message.write(error_code);
-            },
+            }
             _ => {}
         };
 
