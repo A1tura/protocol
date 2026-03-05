@@ -28,10 +28,10 @@ impl Header {
             return Err(HeaderError::InvalidLength);
         }
 
-        let version = u32::from_le_bytes(header[..=4].try_into()?);
-        let length = u16::from_le_bytes(header[4..=6].try_into()?);
-        let seq_num = u32::from_le_bytes(header[6..=10].try_into()?);
-        let msg_type = u8::from_le_bytes(header[10..=11].try_into()?);
+        let version = u32::from_le_bytes(header[..4].try_into()?);
+        let length = u16::from_le_bytes(header[4..6].try_into()?);
+        let seq_num = u32::from_le_bytes(header[6..10].try_into()?);
+        let msg_type = u8::from_le_bytes(header[10..11].try_into()?);
 
         return Ok(Self {
             version,
