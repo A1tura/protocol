@@ -1,3 +1,5 @@
+use std::io::Write;
+
 use crate::errors;
 
 pub enum Message {
@@ -24,4 +26,20 @@ pub enum MessageType {
     CreateMarketOrder = 2,
     CancelOrder = 3,
     Error = 4,
+}
+
+impl Message {
+    pub fn as_byte(&self) -> Vec<u8> {
+        let mut message: Vec<u8> = Vec::new();
+
+        match self {
+            Self::Error(err) => {
+                let error_code: &[u8; 1] = &[err.get_error_code()];
+                let _ = message.write(error_code);
+            },
+            _ => {}
+        };
+
+        return message;
+    }
 }
