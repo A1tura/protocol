@@ -1,4 +1,4 @@
-use std::io::Write;
+use std::{io::Write, string::ParseError};
 
 use crate::errors::{self, ProtocolErrors};
 
@@ -28,6 +28,20 @@ pub enum MessageType {
     CreateMarketOrder = 2,
     CancelOrder = 3,
     Error = 4,
+}
+
+impl TryFrom<u8> for MessageType {
+    type Error = String;
+
+    fn try_from(value: u8) -> Result<Self, String> {
+        match value {
+            1 => Ok(Self::CreateLimitOrder),
+            2 => Ok(Self::CreateMarketOrder),
+            3 => Ok(Self::CancelOrder),
+            4 => Ok(Self::Error),
+            _ => Err(String::from("Invalid value")),
+        }
+    }
 }
 
 impl Message {
