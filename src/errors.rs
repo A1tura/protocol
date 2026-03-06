@@ -1,6 +1,4 @@
-use std::io::Write;
-
-use bytes::{BufMut, Bytes, BytesMut};
+use bytes::{BufMut, BytesMut};
 
 use super::header::HeaderError;
 
@@ -10,6 +8,7 @@ pub enum ProtocolErrors {
     InvalidBody,
     SequenceError { expected: u32, received: u32 },
     InvalidMessageType,
+    InvlaidMessageLength,
 }
 
 impl ProtocolErrors {
@@ -33,6 +32,7 @@ impl ProtocolErrors {
                 buf.put_u32(*received);
             },
             Self::InvalidMessageType => buf.put_u8(5),
+            Self::InvlaidMessageLength => buf.put_u8(6),
         }
 
         return buf;

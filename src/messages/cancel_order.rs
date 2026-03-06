@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, BytesMut};
 
-use crate::traits::{Decode, Encode, Message};
+use crate::{errors::ProtocolErrors, traits::{Decode, Encode, Message}};
 
 #[derive(Debug)]
 pub struct CancelOrder {
@@ -10,6 +10,7 @@ pub struct CancelOrder {
 
 impl Message for CancelOrder {
     const MSG_TYPE: u8 = 3;
+    const MSG_SIZE: usize = 8;
 }
 
 impl Encode for CancelOrder {
@@ -20,13 +21,15 @@ impl Encode for CancelOrder {
 }
 
 impl Decode for CancelOrder {
-    fn decode(buf: &mut BytesMut) -> Self {
+    fn decode(buf: &mut BytesMut) -> Result<Self, ProtocolErrors> {
+        if buf.len() != CancelOrder::MSG_SIZE { return Err(ProtocolErrors::InvlaidMessageLength) };
+
         let symbol = buf.get_u32();
         let order_id = buf.get_u32();
 
-        return Self {
+        return Ok(Self {
             symbol,
             order_id
-        }
+        })
     }
 }

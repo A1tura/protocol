@@ -1,4 +1,4 @@
-use bytes::{Bytes, BytesMut};
+use bytes::{BytesMut};
 
 use crate::{
     errors::{self, ProtocolErrors},
@@ -39,9 +39,9 @@ impl TryFrom<u8> for MessageType {
 impl Message {
     pub fn decode(msg_type: u8, body: &mut BytesMut) -> Result<Self, ProtocolErrors> {
         match msg_type {
-            1 => return Ok(Message::CreateLimitOrder(messages::CreateLimitOrder::decode(body))),
-            2 => return Ok(Message::CreateMarketOrder(messages::CreateMarketOrder::decode(body))),
-            3 => return Ok(Message::CancelOrder(messages::CancelOrder::decode(body))),
+            1 => return Ok(Message::CreateLimitOrder(messages::CreateLimitOrder::decode(body)?)),
+            2 => return Ok(Message::CreateMarketOrder(messages::CreateMarketOrder::decode(body)?)),
+            3 => return Ok(Message::CancelOrder(messages::CancelOrder::decode(body)?)),
             _ => return Err(ProtocolErrors::InvalidMessageType),
         }
     }

@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, BytesMut};
 
-use crate::traits::{Encode, Message, Decode};
+use crate::{errors::ProtocolErrors, traits::{Decode, Encode, Message}};
 
 #[derive(Debug)]
 pub struct CreateMarketOrder {
@@ -11,6 +11,7 @@ pub struct CreateMarketOrder {
 
 impl Message for CreateMarketOrder {
     const MSG_TYPE: u8 = 2;
+    const MSG_SIZE: usize = 9;
 }
 
 impl Encode for CreateMarketOrder {
@@ -22,15 +23,17 @@ impl Encode for CreateMarketOrder {
 }
 
 impl Decode for CreateMarketOrder {
-    fn decode(buf: &mut BytesMut) -> Self {
+    fn decode(buf: &mut BytesMut) -> Result<Self, ProtocolErrors> {
+        if buf.len() != Self::MSG_SIZE { return Err(ProtocolErrors::InvlaidMessageLength) };
+
         let symbol = buf.get_u32();
         let side = buf.get_u8();
         let quantity = buf.get_u32();
 
-        return Self {
+        return Ok(Self {
             symbol,
             side,
             quantity
-        }
+        })
     }
 }

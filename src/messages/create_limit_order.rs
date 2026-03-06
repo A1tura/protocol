@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, BytesMut};
 
-use crate::traits::{Decode, Encode, Message};
+use crate::{errors::ProtocolErrors, traits::{Decode, Encode, Message}};
 
 #[derive(Debug)]
 pub struct CreateLimitOrder {
@@ -12,6 +12,7 @@ pub struct CreateLimitOrder {
 
 impl Message for CreateLimitOrder {
     const MSG_TYPE: u8 = 1;
+    const MSG_SIZE: usize = 13;
 }
 
 impl Encode for CreateLimitOrder {
@@ -24,17 +25,20 @@ impl Encode for CreateLimitOrder {
 }
 
 impl Decode for CreateLimitOrder {
-    fn decode(buf: &mut BytesMut) -> Self {
+    fn decode(buf: &mut BytesMut) -> Result<Self, ProtocolErrors> {
+
+        if buf.len() != Self::MSG_SIZE { return Err(ProtocolErrors::InvlaidMessageLength) };
+
         let symbol = buf.get_u32();
         let side = buf.get_u8();
         let price = buf.get_u32();
         let quantity = buf.get_u32();
 
-        return Self {
+        return Ok(Self {
             symbol,
             price,
             side,
             quantity
-        }
+        })
     }
 }

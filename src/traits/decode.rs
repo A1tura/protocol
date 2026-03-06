@@ -1,5 +1,7 @@
 use bytes::BytesMut;
 
-pub trait Decode {
-    fn decode(buf: &mut BytesMut) -> Self;
+use crate::errors::ProtocolErrors;
+
+pub trait Decode: Sized {
+    fn decode(buf: &mut BytesMut) -> Result<Self, ProtocolErrors>;
 }
