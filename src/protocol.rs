@@ -42,6 +42,7 @@ impl Message {
             1 => return Ok(Message::CreateLimitOrder(messages::CreateLimitOrder::decode(body)?)),
             2 => return Ok(Message::CreateMarketOrder(messages::CreateMarketOrder::decode(body)?)),
             3 => return Ok(Message::CancelOrder(messages::CancelOrder::decode(body)?)),
+            4 => return Ok(Message::Error(errors::ProtocolErrors::decode(body)?)),
             _ => return Err(ProtocolErrors::InvalidMessageType),
         }
     }
