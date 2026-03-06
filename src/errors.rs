@@ -1,26 +1,41 @@
+use std::io::Write;
+
+use bytes::{BufMut, Bytes, BytesMut};
+
 use super::header::HeaderError;
 
 #[derive(Debug)]
 pub enum ProtocolErrors {
     HeaderError(HeaderError),
     InvalidBody,
+    SequenceError { expected: u32, received: u32 },
+    InvalidMessageType,
 }
 
 impl ProtocolErrors {
-    pub fn get_error_code(&self) -> u8 {
+    pub fn get_error(&self) -> BytesMut {
+        let mut buf = BytesMut::new();
         match self {
             Self::HeaderError(err) => {
                 match err {
                     HeaderError::InvalidLength => {
-                        return 1;
+                        buf.put_u8(1);
                     },
                     HeaderError::InvalidHeader => {
-                        return 2
+                        buf.put_u8(2);
                     }
                 }
             },
-            Self::InvalidBody => return 3,
+            Self::InvalidBody => buf.put_u8(3),
+            Self::SequenceError { expected, received } => {
+                buf.put_u8(4);
+                buf.put_u32(*expected);
+                buf.put_u32(*received);
+            },
+            Self::InvalidMessageType => buf.put_u8(5),
         }
+
+        return buf;
     }
 }
 

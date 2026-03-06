@@ -1,0 +1,40 @@
+use bytes::{Buf, BufMut, BytesMut};
+
+use crate::traits::{Decode, Encode, Message};
+
+#[derive(Debug)]
+pub struct CreateLimitOrder {
+    pub symbol: u32,
+    pub side: u8,
+    pub price: u32,
+    pub quantity: u32,
+}
+
+impl Message for CreateLimitOrder {
+    const MSG_TYPE: u8 = 1;
+}
+
+impl Encode for CreateLimitOrder {
+    fn encode(&self, buf: &mut bytes::BytesMut) {
+        buf.put_u32(self.symbol);
+        buf.put_u8(self.side);
+        buf.put_u32(self.price);
+        buf.put_u32(self.quantity);
+    }
+}
+
+impl Decode for CreateLimitOrder {
+    fn decode(buf: &mut BytesMut) -> Self {
+        let symbol = buf.get_u32();
+        let side = buf.get_u8();
+        let price = buf.get_u32();
+        let quantity = buf.get_u32();
+
+        return Self {
+            symbol,
+            price,
+            side,
+            quantity
+        }
+    }
+}
