@@ -12,7 +12,7 @@ pub struct CreateLimitOrder {
 
 impl Message for CreateLimitOrder {
     const MSG_TYPE: u8 = 1;
-    const MSG_SIZE: usize = 13;
+    const MSG_SIZE: usize = 17;
 }
 
 impl Encode for CreateLimitOrder {
