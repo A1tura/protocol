@@ -22,7 +22,7 @@ impl Encode for CancelOrder {
 
 impl Decode for CancelOrder {
     fn decode(buf: &mut BytesMut) -> Result<Self, ProtocolErrors> {
-        if buf.len() != CancelOrder::MSG_SIZE { return Err(ProtocolErrors::InvlaidMessageLength) };
+        if buf.len() != CancelOrder::MSG_SIZE { return Err(ProtocolErrors::InvalidMessageLength) };
 
         let symbol = buf.get_u32();
         let order_id = buf.get_u32();

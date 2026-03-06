@@ -1,12 +1,7 @@
 use std::io::Write;
+use crate::errors::HeaderError;
 
 pub const HEADER_SIZE: usize = 11;
-
-#[derive(Debug)]
-pub enum HeaderError {
-    InvalidLength = 1,
-    InvalidHeader = 2,
-}
 
 #[derive(Debug)]
 pub struct Header {

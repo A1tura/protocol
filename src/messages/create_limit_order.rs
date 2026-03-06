@@ -27,7 +27,7 @@ impl Encode for CreateLimitOrder {
 impl Decode for CreateLimitOrder {
     fn decode(buf: &mut BytesMut) -> Result<Self, ProtocolErrors> {
 
-        if buf.len() != Self::MSG_SIZE { return Err(ProtocolErrors::InvlaidMessageLength) };
+        if buf.len() != Self::MSG_SIZE { return Err(ProtocolErrors::InvalidMessageLength) };
 
         let symbol = buf.get_u32();
         let side = buf.get_u8();
