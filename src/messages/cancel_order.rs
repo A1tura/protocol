@@ -4,8 +4,8 @@ use crate::traits::{Decode, Encode, Message};
 
 #[derive(Debug)]
 pub struct CancelOrder {
-    symbol: u32,
-    order_id: u32
+    pub symbol: u32,
+    pub order_id: u32
 }
 
 impl Message for CancelOrder {
