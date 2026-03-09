@@ -21,7 +21,7 @@ pub enum Message {
     Trade(messages::engine_messages::Trade),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy)]
 pub enum MessageType {
     // 1 - 101 User Messages
     CreateLimitOrder = 1,
