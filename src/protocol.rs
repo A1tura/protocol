@@ -19,6 +19,7 @@ pub enum Message {
     OrderFilled(messages::engine_messages::OrderFilled),
     BookSnapshot(messages::engine_messages::BookSnapshot),
     Trade(messages::engine_messages::Trade),
+    PriceLevel(messages::engine_messages::PriceLevel),
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -36,8 +37,8 @@ pub enum MessageType {
     OrderFilled = 104,
     BookSnapshot = 105,
     Trade = 106,
+    PriceLevel = 107,
 }
-
 
 impl TryFrom<u8> for MessageType {
     type Error = String;
@@ -54,6 +55,7 @@ impl TryFrom<u8> for MessageType {
             104 => Ok(Self::OrderFilled),
             105 => Ok(Self::BookSnapshot),
             106 => Ok(Self::Trade),
+            107 => Ok(Self::PriceLevel),
             _ => Err(String::from("Invalid value")),
         }
     }
@@ -106,9 +108,14 @@ impl Message {
             }
 
             106 => {
-                return Ok(Message::Trade(
-                    messages::engine_messages::Trade::decode(body)?,
-                ));
+                return Ok(Message::Trade(messages::engine_messages::Trade::decode(
+                    body,
+                )?));
+            }
+            107 => {
+                return Ok(Message::PriceLevel(messages::engine_messages::PriceLevel::decode(
+                    body,
+                )?));
             }
 
             _ => return Err(ProtocolErrors::InvalidMessageType),
