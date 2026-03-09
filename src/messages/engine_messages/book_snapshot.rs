@@ -5,6 +5,7 @@ use crate::{errors::ProtocolErrors, traits::{Decode, Encode, Message}};
 
 #[derive(Debug)]
 pub struct BookSnapshot {
+    pub symbol_id: u32,
     pub order_id: u32,
     pub remaining: u32,
 }
