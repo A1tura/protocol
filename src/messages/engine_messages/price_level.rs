@@ -8,6 +8,7 @@ use crate::{
 #[derive(Debug)]
 pub struct PriceLevel {
     pub symbol_id: u32,
+    pub side: u8,
     pub price: f64,
     pub quantity: u32,
 }
@@ -20,6 +21,7 @@ impl Message for PriceLevel {
 impl Encode for PriceLevel {
     fn encode(&self, buf: &mut bytes::BytesMut) {
         buf.put_u32(self.symbol_id);
+        buf.put_u8(self.side);
         buf.put_f64(self.price);
         buf.put_u32(self.quantity);
     }
@@ -33,6 +35,7 @@ impl Decode for PriceLevel {
 
         return Ok(PriceLevel {
             symbol_id: buf.get_u32(),
+            side: buf.get_u8(),
             price: buf.get_f64(),
             quantity: buf.get_u32(),
         });
