@@ -15,7 +15,7 @@ pub struct PriceLevel {
 
 impl Message for PriceLevel {
     const MSG_TYPE: u8 = 107;
-    const MSG_SIZE: usize = 18;
+    const MSG_SIZE: usize = 17;
 }
 
 impl Encode for PriceLevel {
