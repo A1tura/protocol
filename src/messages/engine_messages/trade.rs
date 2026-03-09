@@ -16,7 +16,7 @@ pub struct Trade {
 
 impl Message for Trade {
     const MSG_TYPE: u8 = 106;
-    const MSG_SIZE: usize = 16;
+    const MSG_SIZE: usize = 20;
 }
 
 impl Encode for Trade {
