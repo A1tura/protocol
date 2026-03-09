@@ -38,6 +38,7 @@ pub enum MessageType {
     Trade = 106,
 }
 
+
 impl TryFrom<u8> for MessageType {
     type Error = String;
 
