@@ -29,10 +29,8 @@ impl Decode for NewSymbol {
         let symbol_id = buf.get_u32();
         let mut ticker: [u8; 16] = [0u8; 16];
 
-        let mut i = 0;
-        for byte in buf[4..].take(16).into_inner() {
+        for (i, byte) in buf[..16].iter().enumerate() {
             ticker[i] = *byte;
-            i += 1;
         }
 
         return Ok( Self {
