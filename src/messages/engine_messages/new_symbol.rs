@@ -16,7 +16,7 @@ impl Message for NewSymbol {
 impl Encode for NewSymbol {
     fn encode(&self, buf: &mut bytes::BytesMut) {
         buf.put_u32(self.symbol_id);
-        self.ticker.map(|byte| buf.put_u8(byte));
+        let _ = self.ticker.map(|byte| buf.put_u8(byte));
     }
 }
 
@@ -29,8 +29,10 @@ impl Decode for NewSymbol {
         let symbol_id = buf.get_u32();
         let mut ticker: [u8; 16] = [0u8; 16];
 
-        for (i, byte) in buf[4..].take(16).into_inner().iter().enumerate() {
+        let mut i = 0;
+        for byte in buf[4..].take(16).into_inner() {
             ticker[i] = *byte;
+            i += 1;
         }
 
         return Ok( Self {
